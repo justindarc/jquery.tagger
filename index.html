@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>jQuery Tagger</title>
+<link rel="stylesheet" media="screen" type="text/css" charset="utf-8" href="bootstrap-1.1.1.css"/>
+<link rel="stylesheet" media="screen" type="text/css" charset="utf-8" href="jquery.tagger.css"/>
+<script type="text/javascript" src="jquery-1.6.2.js"></script>
+<script type="text/javascript" src="jquery.tagger.js"></script>
+<script type="text/javascript">
+  $(function() {
+    $('.tagger').tagger();
+  });
+</script>
+</head>
+<body>
+  <form class="form-stacked" method="post" action="#">
+    <div class="clearfix">
+      <label for="tagger1">Enter Tags Here:</label>
+      <div class="input">
+        <input type="text" class="tagger" id="tagger1" name="tagger1"/>
+      </div>
+    </div>
+  </form>
+</body>
+</html>
