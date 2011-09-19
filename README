@@ -12,4 +12,3 @@ Revisions:
 
 Usage:
 	$('.tagger').tagger(); // Where matching elements are text inputs
-	
