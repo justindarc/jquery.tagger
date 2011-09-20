@@ -45,14 +45,47 @@
       
       var time = new Date().getTime();
       
+      // Create a method for splitting the entered tag values and creating tags.
+      var createTags = function() {
+        var tagValues = $textInput.val();
+
+        // Split the entered tag values (comma separated).
+        tagValues = (tagValues) ? tagValues.split(',') : [];
+
+        for (var i = 0; i < tagValues.length; i++) {
+
+          // Create the HTML for the new tag.
+          var tagHtml = '<div class="tagger-tag">' +
+            '<a class="close" href="#">×</a>' +
+            '<p>' + tagValues[i] + '</p>' +
+          '</div>';
+
+          var $tag = $(tagHtml);
+
+          // Add the tag to the container.
+          $container.append($tag);
+
+          // Concatenate a comma-separated list of tag values.
+          var value = '';
+          $container.find('p').each(function(index, item) {
+            value += (value) ? ',' + $(this).text() : $(this).text();
+          });
+
+          $hiddenInput.val(value);
+        }
+        
+        // Clear the text input value.
+        $textInput.val('');
+    	};
+      
       // Change the id and name of the text input to the server binds to the
       // hidden input instead.
       $textInput.attr('id', id + '_' + time);
       $textInput.attr('name', name + '_' + time);
       
-      // Insert the empty container and the hidden input after the text input.
-      $textInput.after($container);
+      // Insert the hidden input and the empty container after the text input.
       $textInput.after($hiddenInput);
+      $textInput.parent().append($container);
       
       // Attach an event handler for the keydown event to the text input.
       $textInput.bind('keydown', function(evt) {
@@ -60,32 +93,32 @@
         // Determine if the Enter/Return key was pressed.
         if (evt.keyCode === 13) {
           var $this = $(this);
-          var tagValue = $this.val();
           
-          // Create the HTML for the new tag.
-          var tagHtml = '<div class="tagger-tag">' +
-            '<a class="close" href="#">×</a>' +
-            '<p>' + tagValue + '</p>' +
-          '</div>';
-          
-          var $tag = $(tagHtml);
-          
-          // Add the tag to the container.
-          $container.append($tag);
-          
-          // Clear the text input value.
-          $this.val('');
-          
-          // Concatenate a comma-separated list of tag values.
-          var value = '';
-          $container.find('p').each(function(index, item) {
-            value += (value) ? ',' + $(this).text() : $(this).text();
-          });
-          
-          $hiddenInput.val(value);
+          createTags();
           
           evt.preventDefault();
         }
+      });
+      
+      // Attach an event handler to the text on all future tags.
+      $('p', $container.get(0)).live('click', function(evt) {
+        var $this = $(this);
+        var $tag = $this.parent();
+        var tagValue = $this.text();
+        
+        // Remove the tag from the container.
+        $tag.remove();
+        
+        // Concatenate a comma-separated list of tag values.
+        var value = '';
+        $container.find('p').each(function(index, item) {
+          value += (value) ? ',' + $(this).text() : $(this).text();
+        });
+        
+        $hiddenInput.val(value);
+        $textInput.val(tagValue).focus();
+        
+        evt.preventDefault();
       });
       
       // Attach an event handler to the close button on all future tags.
@@ -107,6 +140,8 @@
         evt.preventDefault();
       });
       
+      // Convert any pre-existing values to tags.
+      createTags();
     });
 
   };
